@@ -5,7 +5,7 @@ This works for WebGL contexts too.
 
 # NOTE: Multiplying by devicePixelRatio is WRONG
 
-tl;dr the specs don't tell you how to round. You won't be able to make it display correctly on all devices and DPI settings because of subpixel accuracy. There were plans to fix it by adding new properties for the resolved bounds of things but w3c ditched them.
+tl;dr the specs don't tell you how to round. You won't be able to make it display correctly on all devices and DPI settings because of subpixel accuracy. There were plans to fix it by adding new properties for the resolved bounds of things but w3c ditched them. The problem gets worse if the canvas is percent-scaled by CSS or something like that.
 
 SEE ALSO:
 
