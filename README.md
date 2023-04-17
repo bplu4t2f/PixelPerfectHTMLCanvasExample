@@ -18,3 +18,20 @@ https://github.com/w3c/csswg-drafts/issues/3554
 # The approach presented uses ResizeObserver with devicePixelContentBoxSize
 
 This feature is relatively new and probably won't work in out-of-date browsers.
+
+```
+let observer = new ResizeObserver(entries =>
+{
+    let entry = entries.find(entry => entry.target == canvas);
+    let w = entry.devicePixelContentBoxSize[0].inlineSize;
+    let h = entry.devicePixelContentBoxSize[0].blockSize;
+
+    canvas.width = w;
+    canvas.height = h;
+
+    // ...
+});
+observer.observe(canvas, { box: ["device-pixel-content-box"] });
+```
+
+Unfortunately this isn't synchronous.
