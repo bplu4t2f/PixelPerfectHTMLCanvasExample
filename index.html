@@ -2,7 +2,7 @@
 <html>
 <head>
 <style>
-  #grid-container {
+#grid-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -14,30 +14,32 @@
     grid-template-rows: 100%;
     grid-template-columns: 90% 10%;
     grid-auto-flow: column;
-  }
-  #c {
+}
+#c {
     justify-self: stretch;
     align-self: stretch;
-  }
-  #debug {
+}
+#debug {
     background-color: #779;
     justify-self: stretch;
     align-self: stretch;
     word-wrap: break-word;
-  }
+}
 </style>
 <script>
 document.addEventListener("DOMContentLoaded", () =>
 {
     let canvas = document.getElementById("c");
-    let observer = new ResizeObserver(entries =>
-    {
-        let entry = entries.find(entry => entry.target == canvas);
-        let w = entry.devicePixelContentBoxSize[0].inlineSize;
-        let h = entry.devicePixelContentBoxSize[0].blockSize;
 
+    let w = canvas.clientWidth;
+    let h = canvas.clientHeight;
+
+    function Redraw()
+    {
+        let devicePixelRatio = window.devicePixelRatio;
         let bounds = canvas.getBoundingClientRect();
-        document.getElementById("dimensions").innerHTML = `device:<br/>${w} x ${h}<br/><br/>CSS bounds:<br/>L${bounds.left}<br/>T${bounds.top}<br/>R${bounds.right}<br/>B${bounds.bottom}`;
+        document.getElementById("dimensions").innerHTML = `device:<br/>${w} x ${h}<br/><br/>CSS bounds:<br/>L${bounds.left}<br/>T${bounds.top}<br/>R${bounds.right}<br/>B${bounds.bottom}<br/><br/>` +
+            `devicePixelRatio: ${devicePixelRatio}<br/>R${bounds.right * devicePixelRatio}<br/>B${bounds.bottom * devicePixelRatio}`;
 
         canvas.width = w;
         canvas.height = h;
@@ -64,18 +66,29 @@ document.addEventListener("DOMContentLoaded", () =>
             c2d.lineTo(w - margin_px, y + 0.5);
             c2d.stroke();
         }
+    }
+
+    let observer = new ResizeObserver(entries =>
+    {
+        let entry = entries.find(entry => entry.target == canvas);
+        w = entry.devicePixelContentBoxSize[0].inlineSize;
+        h = entry.devicePixelContentBoxSize[0].blockSize;
+
+        Redraw();
     });
     observer.observe(canvas, { box: ["device-pixel-content-box"] });
+
+    document.getElementById("button-redraw").addEventListener("click", Redraw);
 });
 </script>
 </head>
 <body>
 <div id="grid-container">
 <canvas id="c"></canvas>
-  <div id="debug">
-    <input id="button-redraw" type="button" value="redraw"/>
-    <p id="dimensions"></p>
-  </div>
+    <div id="debug">
+        <input id="button-redraw" type="button" value="redraw"/>
+        <p id="dimensions"></p>
+    </div>
 </div>
 </body>
 </html>
